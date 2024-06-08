@@ -1,0 +1,62 @@
+create 3 instances, one master and 2 slaves
+on master install ansible 
+
+configure ssh connection between master and slave
+once done
+
+on master go to cd /etc/ansible
+sudo vi hosts , here add the [slave1] and it's IP
+also [slave2] and its IP
+
+create a playbook.yaml
+- name: task for slave1
+  hosts: slave1
+  become: true
+  tasks:
+   - name: install java
+     apt: name=openjdk-11-jdk state=latest
+- name: task for slave2
+  hosts: slave2
+  become: true
+  tasks:
+   - name: install sql
+     apt:
+
+
+to run the playbook
+ansible-playbook play1.yaml --check     THIS IS FOR DRY RUN
+ansible-playbook play1.yaml     THIS IS TO RUN THE PLAYBOOK
+
+    
+
+
+TO CREATE ANSIBLE ROLE
+sudo ansible-galaxy init apache
+suco ansible-galaxy init nginx
+
+This will create folders, there will be sub folders,
+go inside the tasks folder
+there will be a main.yaml     THE ROLE RUNS THIS YAML ONLY
+    so we create a new yaml, sample.yaml ( put the tasks here)
+    go inside the main.yaml  
+    ---
+    - include_tasks: sample.yaml
+
+now do the same for the other role
+
+now create a playbook,
+        - name: execute apache
+          hosts: slave1
+          become: true
+          roles:
+           - apache
+        - name: execute apache
+          hosts: slave2
+          become: true
+          roles:
+           - nginx
+run this playbook now, ansible-playbook play1.yaml
+        
+    
+
+
