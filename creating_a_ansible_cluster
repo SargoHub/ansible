@@ -27,6 +27,8 @@ create a playbook.yaml
 
 
 to run the playbook
+cd /etc/ansible/roles/
+ansible-playbook play1.yaml --syntax-check  TO CHECK THE PLAYBOOK SYNTAX
 ansible-playbook play1.yaml --check     THIS IS FOR DRY RUN
 ansible-playbook play1.yaml     THIS IS TO RUN THE PLAYBOOK
 
@@ -41,10 +43,15 @@ This will create two roles folders, there will be sub folders,
 for any one role
 go inside the tasks folder
 there will be a main.yaml     THE ROLE RUNS THIS YAML ONLY
-so we create a new yaml, sample.yaml ( put the tasks here)
-    go inside the main.yaml  
-    ---
-    - include_tasks: sample.yaml
+so we create a new yaml, sample.yaml
+(---
+ - name: java
+   apt: name=apache state=latest
+)  THIS IS THE SAMPLE.YAML CONTENT
+
+go inside the main.yaml  
+(---
+)- include_tasks: sample.yaml
 
 now do the same for the other role
 
@@ -60,6 +67,20 @@ now create a playbook, where we call these roles
   roles:
    - nginx        
 run this playbook now, ansible-playbook play1.yaml
+
+
+USE OF FILES FOLDER OF THE ROLE
+For one of the roles folder, inside the files folder
+create a index.html file.   This will replace the default nginx page on the slave2 where nginx is installed using the nginx role.
+save the index.html
+
+go to the /etc/ansible/roles/nginx/tasks/
+create a new copy.yaml 
+(- name: copying yaml
+   copy: src=/etc/ansible/roles/ngin/file/inde.html dest=/var/www/html
+)
+and include this copy.yaml in the main.yml 
+run the plabook again with the roles called.
         
     
 
